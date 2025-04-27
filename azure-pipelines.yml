@@ -12,15 +12,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  dockerRegistryServiceConnection: '<TU-SERVICE-CONNECTION-SI-USAS-ACR>'
   dockerComposeFile: 'docker-compose.yml'
 
 steps:
-- task: UseJavaVersion@1
-  inputs:
-    versionSpec: '8'
-    jdkArchitecture: 'x64'
-
 - task: DockerCompose@0
   displayName: 'Build and Push containers'
   inputs:
