@@ -1,19 +1,74 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
+  branches:
+    include:
+    - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+- stage: Build_UserAPI
+  displayName: 'Build UserAPI (Spring Boot)'
+  jobs:
+  - job: Build
+    steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'UserAPI/pom.xml'
+        goals: 'package'
+        options: '-DskipTests'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- stage: Build_AuthAPI
+  displayName: 'Build AuthAPI (Go)'
+  dependsOn: Build_UserAPI
+  jobs:
+  - job: Build
+    steps:
+    - script: |
+        cd AuthAPI
+        go build -o authapi
+      displayName: 'Build Go App'
+
+- stage: Build_TODOsAPI
+  displayName: 'Build TODOsAPI (Node.js)'
+  dependsOn: Build_AuthAPI
+  jobs:
+  - job: Build
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x' # O la versión que uses
+    - script: |
+        cd TODOsAPI
+        npm install
+        npm run build
+      displayName: 'Build Node App'
+
+- stage: Build_LogProcessor
+  displayName: 'Build Log Processor (Python)'
+  dependsOn: Build_TODOsAPI
+  jobs:
+  - job: Build
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+    - script: |
+        cd log-processor
+        pip install -r requirements.txt
+      displayName: 'Install Python dependencies'
+
+- stage: Build_Frontend
+  displayName: 'Build Frontend (Vue.js)'
+  dependsOn: Build_LogProcessor
+  jobs:
+  - job: Build
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+    - script: |
+        cd frontend
+        npm install
+        npm run build
+      displayName: 'Build Vue App'
