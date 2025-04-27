@@ -1,19 +1,44 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
+
+variables:
+  dockerRegistryServiceConnection: '<TU-SERVICE-CONNECTION-SI-USAS-ACR>'
+  dockerComposeFile: 'docker-compose.yml'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UseJavaVersion@1
+  inputs:
+    versionSpec: '8'
+    jdkArchitecture: 'x64'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: DockerCompose@0
+  displayName: 'Build and Push containers'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerComposeFile: $(dockerComposeFile)
+    action: 'Build services'
+    additionalDockerComposeFiles: ''
+    buildImages: |
+      users-api
+      auth-api
+      todos-api
+      log-message-processor
+      frontend
+
+- task: DockerCompose@0
+  displayName: 'Run containers'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerComposeFile: $(dockerComposeFile)
+    action: 'Run services'
+
