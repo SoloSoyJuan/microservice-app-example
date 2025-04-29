@@ -28,32 +28,32 @@ jobs:
         with:
           context: ./auth-api
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/auth-api:latest,ghcr.io/${{ github.repository_owner }}/auth-api:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner | toLower }}/auth-api:latest,ghcr.io/${{ github.repository_owner | toLower }}/auth-api:${{ github.sha }}
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/frontend:latest,ghcr.io/${{ github.repository_owner }}/frontend:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner | toLower }}/frontend:latest,ghcr.io/${{ github.repository_owner | toLower }}/frontend:${{ github.sha }}
 
       - name: Build and push log-message-processor
         uses: docker/build-push-action@v5
         with:
           context: ./log-message-processor
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/log-message-processor:latest,ghcr.io/${{ github.repository_owner }}/log-message-processor:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner | toLower }}/log-message-processor:latest,ghcr.io/${{ github.repository_owner | toLower }}/log-message-processor:${{ github.sha }}
 
       - name: Build and push todos-api
         uses: docker/build-push-action@v5
         with:
           context: ./todos-api
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/todos-api:latest,ghcr.io/${{ github.repository_owner }}/todos-api:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner | toLower }}/todos-api:latest,ghcr.io/${{ github.repository_owner | toLower }}/todos-api:${{ github.sha }}
 
       - name: Build and push users-api
         uses: docker/build-push-action@v5
         with:
           context: ./users-api
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/users-api:latest,ghcr.io/${{ github.repository_owner }}/users-api:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository_owner | toLower }}/users-api:latest,ghcr.io/${{ github.repository_owner | toLower }}/users-api:${{ github.sha }}
