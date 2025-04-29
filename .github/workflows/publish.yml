@@ -24,47 +24,87 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # auth-api
+      - name: Docker meta auth-api
+        id: meta-auth-api
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/solosoyjuan/auth-api
+          tags: |
+            type=raw,value=latest
+            type=sha
+
       - name: Build and push auth-api
         uses: docker/build-push-action@v5
         with:
           context: ./auth-api
           push: true
+          tags: ${{ steps.meta-auth-api.outputs.tags }}
+
+      # frontend
+      - name: Docker meta frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/solosoyjuan/frontend
           tags: |
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/auth-api:latest,
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/auth-api:${{ github.sha }}
+            type=raw,value=latest
+            type=sha
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+
+      # log-message-processor
+      - name: Docker meta log-message-processor
+        id: meta-log
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/solosoyjuan/log-message-processor
           tags: |
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/frontend:latest,
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/frontend:${{ github.sha }}
+            type=raw,value=latest
+            type=sha
 
       - name: Build and push log-message-processor
         uses: docker/build-push-action@v5
         with:
           context: ./log-message-processor
           push: true
+          tags: ${{ steps.meta-log.outputs.tags }}
+
+      # todos-api
+      - name: Docker meta todos-api
+        id: meta-todos
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/solosoyjuan/todos-api
           tags: |
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/log-message-processor:latest,
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/log-message-processor:${{ github.sha }}
+            type=raw,value=latest
+            type=sha
 
       - name: Build and push todos-api
         uses: docker/build-push-action@v5
         with:
           context: ./todos-api
           push: true
+          tags: ${{ steps.meta-todos.outputs.tags }}
+
+      # users-api
+      - name: Docker meta users-api
+        id: meta-users
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/solosoyjuan/users-api
           tags: |
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/todos-api:latest,
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/todos-api:${{ github.sha }}
+            type=raw,value=latest
+            type=sha
 
       - name: Build and push users-api
         uses: docker/build-push-action@v5
         with:
           context: ./users-api
           push: true
-          tags: |
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/users-api:latest,
-            ghcr.io/${{ format('{0}', github.repository_owner) }}/users-api:${{ github.sha }}
+          tags: ${{ steps.meta-users.outputs.tags }}
