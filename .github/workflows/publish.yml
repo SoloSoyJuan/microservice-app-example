@@ -1,0 +1,59 @@
+name: Publish to Docker
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push auth-api
+        uses: docker/build-push-action@v5
+        with:
+          context: ./auth-api
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/auth-api:latest,ghcr.io/${{ github.repository_owner }}/auth-api:${{ github.sha }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/frontend:latest,ghcr.io/${{ github.repository_owner }}/frontend:${{ github.sha }}
+
+      - name: Build and push log-message-processor
+        uses: docker/build-push-action@v5
+        with:
+          context: ./log-message-processor
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/log-message-processor:latest,ghcr.io/${{ github.repository_owner }}/log-message-processor:${{ github.sha }}
+
+      - name: Build and push todos-api
+        uses: docker/build-push-action@v5
+        with:
+          context: ./todos-api
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/todos-api:latest,ghcr.io/${{ github.repository_owner }}/todos-api:${{ github.sha }}
+
+      - name: Build and push users-api
+        uses: docker/build-push-action@v5
+        with:
+          context: ./users-api
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/users-api:latest,ghcr.io/${{ github.repository_owner }}/users-api:${{ github.sha }}
