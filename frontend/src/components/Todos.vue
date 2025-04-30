@@ -86,7 +86,7 @@ export default {
     loadTasks () {
       this.isProcessing = true
       this.errorMessage = ''
-      this.$http.get('/todos').then(response => {
+      this.$http.get('https://9lrxwadcxh.execute-api.us-east-1.amazonaws.com/todos').then(response => {
         for (var i in response.body) {
           this.tasks.push(response.body[i])
         }
@@ -106,7 +106,7 @@ export default {
           content: this.newTask
         }
 
-        this.$http.post('/todos', task).then(response => {
+        this.$http.post('https://9lrxwadcxh.execute-api.us-east-1.amazonaws.com/todos', task).then(response => {
           this.newTask = ''
           this.isProcessing = false
           this.tasks.push(task)
