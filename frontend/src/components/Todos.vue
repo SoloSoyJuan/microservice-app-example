@@ -123,7 +123,7 @@ export default {
       this.isProcessing = true
       this.errorMessage = ''
 
-      this.$http.delete('/todos/' + item.id).then(response => {
+      this.$http.delete('https://9lrxwadcxh.execute-api.us-east-1.amazonaws.com/todos/' + item.id).then(response => {
         this.isProcessing = false
         this.tasks.splice(index, 1)
       }, error => {
