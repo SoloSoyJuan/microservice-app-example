@@ -5,12 +5,6 @@ const jwt = require('express-jwt')
 
 const cors = require('cors');
 
-// Configura CORS antes de usar jwt o tus rutas
-app.use(cors({
-  origin: '*', // o especifica tu frontend: 'http://54.226.22.120:8080'
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
 
 const ZIPKIN_URL = process.env.ZIPKIN_URL || 'http://127.0.0.1:9411/api/v2/spans';
 const {Tracer, 
@@ -42,6 +36,12 @@ const port = process.env.TODO_API_PORT || 8082
 const jwtSecret = process.env.JWT_SECRET || "foo"
 
 const app = express()
+
+app.use(cors({
+  origin: '*', // o especifica tu frontend: 'http://54.226.22.120:8080'
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // tracing
 const ctxImpl = new CLSContext('zipkin');
