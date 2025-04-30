@@ -56,8 +56,8 @@ export default {
       username: creds.username,
       password: creds.password
     }
-
-    return Vue.http.post(LOGIN_URL, params)
+    console.log(LOGIN_URL)
+    return Vue.http.post('https://9lrxwadcxh.execute-api.us-east-1.amazonaws.com/login', params)
       .then((response) => {
         this._storeToken(response)
 

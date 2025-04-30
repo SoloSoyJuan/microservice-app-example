@@ -3,6 +3,9 @@ const express = require('express')
 const bodyParser = require("body-parser")
 const jwt = require('express-jwt')
 
+const cors = require('cors');
+
+
 const ZIPKIN_URL = process.env.ZIPKIN_URL || 'http://127.0.0.1:9411/api/v2/spans';
 const {Tracer, 
   BatchRecorder,
@@ -33,6 +36,12 @@ const port = process.env.TODO_API_PORT || 8082
 const jwtSecret = process.env.JWT_SECRET || "foo"
 
 const app = express()
+
+app.use(cors({
+  origin: '*', // o especifica tu frontend: 'http://54.226.22.120:8080'
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // tracing
 const ctxImpl = new CLSContext('zipkin');
